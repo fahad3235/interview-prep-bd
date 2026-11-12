@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Prep BD</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1 id="title" data-i18n="title">Interview Prep BD</h1>
+    <p class="subtitle" data-i18n="subtitle">Fresh-graduate interview practice for Bangladesh &#8212; questions, model answers, flashcards and mock interviews. Fully offline.</p>
+    <button id="langBtn" class="btn lang" type="button">&#2476;&#2494;&#2434;&#2482;&#2494;</button>
+  </div>
+</header>
+
+<nav class="tabs wrap" aria-label="Sections">
+  <button type="button" data-tab="bank" class="tab active" data-i18n="tabBank">Question Bank</button>
+  <button type="button" data-tab="cards" class="tab" data-i18n="tabCards">Flashcards</button>
+  <button type="button" data-tab="mock" class="tab" data-i18n="tabMock">Mock Interview</button>
+  <button type="button" data-tab="progress" class="tab" data-i18n="tabProgress">Progress</button>
+</nav>
+
+<main class="wrap">
+  <!-- ============ QUESTION BANK ============ -->
+  <section id="tab-bank">
+    <div class="filters">
+      <input id="searchInput" type="search" placeholder="Search questions&#8230;" aria-label="Search questions">
+      <select id="catFilter" aria-label="Category">
+        <option value="all" data-i18n="catAll">All categories</option>
+        <option value="about" data-i18n="cat_about">About You</option>
+        <option value="hr" data-i18n="cat_hr">HR &amp; Behavioural</option>
+        <option value="tech" data-i18n="cat_tech">Technical (CS)</option>
+        <option value="situational" data-i18n="cat_situational">Situational / STAR</option>
+        <option value="closing" data-i18n="cat_closing">Closing</option>
+      </select>
+      <select id="diffFilter" aria-label="Difficulty">
+        <option value="all" data-i18n="diffAll">All levels</option>
+        <option value="easy" data-i18n="diff_easy">Easy</option>
+        <option value="medium" data-i18n="diff_medium">Medium</option>
+        <option value="hard" data-i18n="diff_hard">Hard</option>
+      </select>
+      <label class="check"><input id="bmOnly" type="checkbox"> <span data-i18n="onlyBookmarked">Bookmarked only</span></label>
+    </div>
+    <p id="countLine" class="count" aria-live="polite"></p>
+    <div id="bankList"></div>
+  </section>
+
+  <!-- ============ FLASHCARDS ============ -->
+  <section id="tab-cards" hidden>
+    <div class="filters">
+      <select id="cardCat" aria-label="Card category">
+        <option value="all" data-i18n="catAll">All categories</option>
+        <option value="about" data-i18n="cat_about">About You</option>
+        <option value="hr" data-i18n="cat_hr">HR &amp; Behavioural</option>
+        <option value="tech" data-i18n="cat_tech">Technical (CS)</option>
+        <option value="situational" data-i18n="cat_situational">Situational / STAR</option>
+        <option value="closing" data-i18n="cat_closing">Closing</option>
+      </select>
+      <button id="shuffleBtn" class="btn" type="button" data-i18n="shuffleCards">Shuffle</button>
+    </div>
+    <p id="cardCounter" class="count" aria-live="polite"></p>
+    <div id="cardBox"></div>
+    <div class="card-nav">
+      <button id="prevCardBtn" class="btn" type="button" data-i18n="prevCard">&#8592; Previous</button>
+      <button id="nextCardBtn" class="btn" type="button" data-i18n="nextCard">Next &#8594;</button>
+    </div>
+  </section>
+
+  <!-- ============ MOCK INTERVIEW ============ -->
+  <section id="tab-mock" hidden>
+    <div id="mockSetup" class="panel">
+      <h2 data-i18n="mockSetup">Set up your mock interview</h2>
+      <label class="field"><span data-i18n="mockCount">Questions</span>
+        <select id="mockCount">
+          <option value="3">3</option>
+          <option value="5" selected>5</option>
+          <option value="8">8</option>
+        </select>
+      </label>
+      <label class="field"><span data-i18n="mockTime">Seconds per question</span>
+        <select id="mockTime">
+          <option value="60">60</option>
+          <option value="120" selected>120</option>
+          <option value="180">180</option>
+        </select>
+      </label>
+      <label class="field"><span data-i18n="mockCat">Category</span>
+        <select id="mockCat">
+          <option value="all" data-i18n="catAll">All categories</option>
+          <option value="about" data-i18n="cat_about">About You</option>
+          <option value="hr" data-i18n="cat_hr">HR &amp; Behavioural</option>
+          <option value="tech" data-i18n="cat_tech">Technical (CS)</option>
+          <option value="situational" data-i18n="cat_situational">Situational / STAR</option>
+          <option value="closing" data-i18n="cat_closing">Closing</option>
+        </select>
+      </label>
+      <button id="startMockBtn" class="btn primary" type="button" data-i18n="startMock">Start mock interview</button>
+      <p id="mockError" class="error" hidden></p>
+    </div>
+
+    <div id="mockRun" class="panel" hidden>
+      <div class="mock-head">
+        <span id="mockQLabel"></span>
+        <span class="timer"><span data-i18n="timeLeft">Time left</span>: <strong id="mockTimer">02:00</strong></span>
+      </div>
+      <h3 id="mockQText" class="mock-q"></h3>
+      <div id="mockAnswer" class="mock-answer"></div>
+      <p class="rate-label" data-i18n="ratePrompt">Rate your answer (1&#8211;5) before moving on:</p>
+      <div id="mockRate" class="rate-row" role="group" aria-label="Rate your answer">
+        <button type="button" data-rate="1">1</button>
+        <button type="button" data-rate="2">2</button>
+        <button type="button" data-rate="3">3</button>
+        <button type="button" data-rate="4">4</button>
+        <button type="button" data-rate="5">5</button>
+      </div>
+      <button id="mockNextBtn" class="btn primary" type="button">Next question &#8594;</button>
+    </div>
+
+    <div id="mockResult" class="panel" hidden>
+      <h2 id="mockResultTitle"></h2>
+      <p class="big-score"><span data-i18n="yourScore">Your average rating</span>: <strong id="mockScore"></strong></p>
+      <p id="mockScoreLabel" class="score-label"></p>
+      <p id="mockSummaryLine" class="muted"></p>
+      <ul id="mockDetailList" class="detail-list"></ul>
+      <button id="againMockBtn" class="btn" type="button" data-i18n="againMock">Run another mock</button>
+    </div>
+  </section>
+
+  <!-- ============ PROGRESS ============ -->
+  <section id="tab-progress" hidden>
+    <h2 data-i18n="progressTitle">Your progress</h2>
+    <div class="stats">
+      <div class="stat"><strong id="progReviewed">0</strong><span data-i18n="reviewedCount">Reviewed</span></div>
+      <div class="stat"><strong id="progBookmarked">0</strong><span data-i18n="bookmarkedCount">Bookmarked</span></div>
+      <div class="stat"><strong id="progTotal">0</strong><span data-i18n="ofTotal">of {n}</span></div>
+      <div class="stat"><strong id="progPct">0%</strong><span data-i18n="reviewedCount">Reviewed</span></div>
+    </div>
+    <h3 data-i18n="perCategory">Per category</h3>
+    <div id="progBars"></div>
+    <h3 data-i18n="sessionsTitle">Mock sessions</h3>
+    <ul id="sessionList" class="detail-list"></ul>
+    <div class="data-row">
+      <button id="exportBtn" class="btn" type="button" data-i18n="exportBtn">Export data</button>
+      <label class="btn" for="importFile" data-i18n="importBtn">Import data</label>
+      <input id="importFile" type="file" accept="application/json" hidden>
+      <button id="eraseBtn" class="btn danger" type="button" data-i18n="eraseBtn">Erase all data</button>
+    </div>
+    <p id="dataMsg" class="muted" aria-live="polite"></p>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p id="footerText" data-i18n="footer">Offline study tool. Answer outlines are guidance, not scripts to memorise &#8212; always answer in your own words. Verify salary and company facts yourself before an interview.</p>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/logic.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
